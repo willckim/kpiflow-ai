@@ -1,0 +1,10 @@
+# Root requirements for Streamlit Cloud
+
+# Frontend (Streamlit app)
+streamlit
+pandas
+numpy
+requests
+
+# Optional: if you want the frontend to be able to import backend/shared utils
+-e ./shared
