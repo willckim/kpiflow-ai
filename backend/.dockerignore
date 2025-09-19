@@ -1,0 +1,11 @@
+# .dockerignore (at repo root)
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.log
+**/.env
+**/.venv
+.git
+.gitignore
+frontend/.streamlit/secrets.toml

@@ -1,0 +1,10 @@
+﻿fastapi
+uvicorn
+pandas
+numpy
+pydantic
+python-multipart
+requests
+openpyxl       # if you accept Excel uploads
+python-dotenv  # optional
+openai         # optional

@@ -1,0 +1,9 @@
+streamlit==1.37.0
+pandas==2.2.2
+numpy==1.26.4
+requests==2.32.3
+openpyxl==3.1.5
+plotly==5.24.0       # only if you use Plotly in the frontend
+python-pptx==0.6.23  # only if frontend generates PPTX
+kaleido==0.2.1       # only if saving Plotly figs to images
+python-dotenv==1.0.1 # optional local env support
