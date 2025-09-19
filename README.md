@@ -1,29 +1,38 @@
-# KPIFlow AI — Starter
+📊 KPIFlow AI — Smart KPI Dashboard & Insights
 
-A lightweight KPI dashboard + AI insights demo. Upload a CSV to auto-build KPI cards, charts, and executive insights.
+KPIFlow AI transforms raw business data (CSV/Excel) into instant KPI dashboards, charts, and AI-generated insights.
+Designed for sales, marketing, and operations teams who need quick visibility without manual reporting.
 
-## Quickstart (VS Code)
+👉 Try it Live: kpiflow-ai.streamlit.app
 
-```bash
-# 1) Create & activate a venv (Windows PowerShell)
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+✨ Features
 
-# macOS/Linux
-python3 -m venv .venv
-source .venv/bin/activate
+📂 Simple Upload — drag & drop your CSV/Excel or use the sample dataset
 
-# 2) Install deps
-pip install -r requirements.txt
+📊 Instant KPIs — Revenue, Gross Profit, Gross Margin %, MoM Growth, Avg Order Value, Orders
 
-# 3) Optional: set your OpenAI key
-cp .env.example .env   # then add your key
+💡 AI Insights — plain-English summaries of performance trends
 
-# 4) Run the Streamlit app
-streamlit run frontend/streamlit_app.py
+📈 Visualizations — revenue trends, top customers, interactive tables
 
-# (Optional) Run the FastAPI backend for REST access
-uvicorn backend.app:app --reload --port 8000
-```
+🌐 Web App — runs entirely in your browser via Streamlit Cloud
 
-Open http://localhost:8501 for the UI. A sample CSV is in `data/sample_sales.csv`.
+🚀 Demo Preview
+
+(Insert screenshots or a GIF of the dashboard here — KPI cards, charts, and AI insights)
+
+🛠 Tech Stack
+
+Frontend: Streamlit (Python)
+
+Backend: FastAPI on Google Cloud Run
+
+Data: Pandas, NumPy
+
+AI: GPT-powered business insights
+
+📬 Contact
+
+Built by William C. Kim
+
+📧 williamckim11@gmail.com
