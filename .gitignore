@@ -1,0 +1,21 @@
+﻿# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Secrets / local config
+.env
+.streamlit/
+.kaleido/
+_tmp_imgs/
+_streamlit_static/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Build artifacts
+**/*.pptx

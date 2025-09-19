@@ -1,0 +1,17 @@
+order_date,region,category,customer_id,revenue,cost
+2024-10-01,North,Electronics,C001,1200,800
+2024-10-02,South,Home,C002,350,200
+2024-10-03,West,Electronics,C003,2200,1400
+2024-10-10,North,Apparel,C002,180,60
+2024-11-01,South,Electronics,C004,980,600
+2024-11-12,East,Home,C005,420,220
+2024-12-05,West,Apparel,C006,260,90
+2025-01-07,North,Electronics,C007,1450,900
+2025-02-14,East,Home,C008,640,360
+2025-03-30,South,Electronics,C009,1990,1200
+2025-04-15,West,Home,C010,510,280
+2025-05-21,North,Electronics,C011,2100,1300
+2025-06-10,South,Apparel,C012,300,120
+2025-07-04,East,Electronics,C013,1750,1100
+2025-08-18,West,Home,C014,460,260
+2025-09-01,North,Electronics,C015,2400,1500
