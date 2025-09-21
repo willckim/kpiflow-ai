@@ -5,13 +5,16 @@ services:
     plan: starter
     autoDeploy: true
     buildCommand: |
-      pip install -r requirements.txt
+      python -m pip install --upgrade pip setuptools wheel
+      pip install -r frontend/requirements.txt
     startCommand: >
       streamlit run frontend/app.py
       --server.address 0.0.0.0
       --server.port $PORT
     envVars:
-      - key: PYTHONPATH
-        value: .
       - key: BACKEND_URL
         value: https://kpiflow-api-603131501793.us-central1.run.app
+      - key: PYTHONPATH
+        value: .
+      - key: PYTHON_VERSION
+        value: 3.11.9
