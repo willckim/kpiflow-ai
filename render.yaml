@@ -2,12 +2,16 @@ services:
   - type: web
     name: kpiflow-frontend
     env: python
-    plan: starter          # choose a paid plan so it never sleeps
+    plan: starter              # paid → always-on
     autoDeploy: true
     buildCommand: |
-      pip install -r frontend/requirements.txt
-    startCommand: streamlit run frontend/streamlit_app.py --server.address 0.0.0.0 --server.port $PORT
+      pip install -r requirements.txt
+    startCommand: >
+      streamlit run frontend/streamlit_app.py
+      --server.address 0.0.0.0
+      --server.port $PORT
     envVars:
-      - key: PYTHONPATH
+      - key: PYTHONPATH        # let frontend import from shared/
         value: .
-      # add any secrets you use in Streamlit here (e.g., OPENAI_API_KEY)
+      - key: BACKEND_URL       # your Cloud Run API (already hot)
+        value: https://kpiflow-api-603131501793.us-central1.run.app
