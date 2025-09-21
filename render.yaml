@@ -2,16 +2,16 @@ services:
   - type: web
     name: kpiflow-frontend
     env: python
-    plan: starter              # paid → always-on
+    plan: starter
     autoDeploy: true
     buildCommand: |
       pip install -r requirements.txt
     startCommand: >
-      streamlit run frontend/streamlit_app.py
+      streamlit run frontend/app.py
       --server.address 0.0.0.0
       --server.port $PORT
     envVars:
-      - key: PYTHONPATH        # let frontend import from shared/
+      - key: PYTHONPATH
         value: .
-      - key: BACKEND_URL       # your Cloud Run API (already hot)
+      - key: BACKEND_URL
         value: https://kpiflow-api-603131501793.us-central1.run.app
