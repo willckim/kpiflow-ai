@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import requests
 import streamlit as st
+from requests.adapters import HTTPAdapter, Retry
 
 # ---------- Paths ----------
 FRONTEND_DIR = Path(__file__).resolve().parent
@@ -16,19 +17,32 @@ if not SAMPLE_PATH.exists():
 
 # ---------- Config ----------
 st.set_page_config(page_title="KPIFlow AI — KPI Dashboard", page_icon="📊", layout="wide")
-
-# Backend URL from secrets or env
-API_BASE = st.secrets.get("api", {}).get("base_url", os.getenv("API_BASE", "http://localhost:8000"))
-
 st.title("📊 KPIFlow AI — KPI & Insights Dashboard")
+
+# ---------- Backend URL (supports multiple styles: secrets + env) ----------
+API_BASE = (
+    st.secrets.get("api", {}).get("base_url")          # [api][base_url] in Streamlit secrets
+    or st.secrets.get("BACKEND_URL")                   # BACKEND_URL in Streamlit secrets
+    or os.getenv("API_BASE")                            # env var API_BASE
+    or os.getenv("BACKEND_URL")                         # env var BACKEND_URL
+    or "http://localhost:8000"                          # local fallback
+).rstrip("/")
+
+# ---------- HTTP session with retries ----------
+def _session():
+    s = requests.Session()
+    retries = Retry(total=3, backoff_factor=0.3, status_forcelist=(429, 500, 502, 503, 504))
+    s.mount("https://", HTTPAdapter(max_retries=retries))
+    s.mount("http://", HTTPAdapter(max_retries=retries))
+    return s
 
 # ---------- Sidebar ----------
 with st.sidebar:
     st.caption("Connection status")
     try:
-        r = requests.get(f"{API_BASE}/health", timeout=5)
-        ok = r.ok and r.json().get("ok") is True
-    except Exception:
+        r = _session().get(f"{API_BASE}/health", timeout=5)
+        ok = r.ok and (r.json().get("ok") is True or r.json().get("status") == "ok")
+    except Exception as _e:
         ok = False
     (st.success if ok else st.error)(f"API: {'connected' if ok else 'unreachable'}")
     st.caption(f"Endpoint: {API_BASE}")
@@ -98,7 +112,7 @@ def read_local_df(uploaded, use_sample):
 
 def post_analyze(file_bytes: bytes, filename: str):
     files = {"file": (filename, file_bytes, "application/octet-stream")}
-    resp = requests.post(f"{API_BASE}/analyze", files=files, timeout=60)
+    resp = _session().post(f"{API_BASE}/analyze", files=files, timeout=60)
     resp.raise_for_status()
     return resp.json()  # {kpis: dict, insights: str}
 
@@ -115,7 +129,6 @@ def kpi_card(label, value, fmt="{:,.2f}"):
             except Exception:
                 st.markdown(f"### {value}")
     return c
-
 
 # ---------- UI flow ----------
 if not analyze:
