@@ -1,24 +1,26 @@
-# backend/Dockerfile (build from repo ROOT with: -f backend/Dockerfile .)
+# backend/Dockerfile — FastAPI API
 FROM python:3.11-slim
 
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m appuser
 WORKDIR /app
 
-# Keep image light and logs unbuffered
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+COPY backend/requirements.txt ./backend/requirements.txt
+RUN python -m pip install --upgrade pip && \
+    pip install --no-cache-dir -r backend/requirements.txt
 
-# ---- Install deps ----
-# Copy backend requirements into a temp path in the image
-COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+COPY backend ./backend
+COPY shared ./shared
 
-# ---- Copy source ----
-# Copy ONLY the code we need from the repo root into /app
-COPY backend/ ./        # puts backend files (including app.py) into /app
-COPY shared/ ./shared   # include your shared module for imports
+ENV PYTHONPATH="/app:${PYTHONPATH}"
 
-# Cloud Run provides $PORT; default to 8080 if not set
-ENV PORT=8080
-
-# Start FastAPI via Uvicorn (app.py defines: app = FastAPI(...))
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
+EXPOSE 8000
+USER appuser
+CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]

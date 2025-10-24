@@ -1,23 +1,29 @@
-# Dockerfile at REPO ROOT
+# Dockerfile (root) — Streamlit UI
 FROM python:3.11-slim
 
-WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
-# Install backend deps
-COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy source folders needed by FastAPI
-COPY backend/ ./backend
-COPY shared/  ./shared
+RUN useradd -m appuser
+WORKDIR /app
 
-# Ensure Python can import from /app (so "from shared..." works)
-ENV PYTHONPATH=/app
+# Copy requirements first for caching
+COPY frontend/requirements.txt ./frontend/requirements.txt
+RUN python -m pip install --upgrade pip && \
+    pip install --no-cache-dir -r frontend/requirements.txt
 
-# Cloud Run will set $PORT (we default to 8080)
-ENV PORT=8080
+# Copy source code
+COPY frontend ./frontend
+COPY shared ./shared
 
-# Start FastAPI explicitly by module path (robust to workdir)
-CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8080"]
+ENV PYTHONPATH="/app:${PYTHONPATH}"
+
+EXPOSE 10000
+USER appuser
+
+CMD ["streamlit", "run", "frontend/app.py", "--server.port=$PORT", "--server.address=0.0.0.0"]
