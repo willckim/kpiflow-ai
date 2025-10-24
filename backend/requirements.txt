@@ -1,10 +1,6 @@
 ﻿fastapi
-uvicorn
-pandas
-numpy
+uvicorn[standard]
 pydantic
-python-multipart
+numpy
+pandas
 requests
-openpyxl       # if you accept Excel uploads
-python-dotenv  # optional
-openai         # optional
