@@ -1,20 +1,40 @@
 services:
+  # ---- Streamlit UI ----
   - type: web
     name: kpiflow-frontend
-    env: python
+    region: oregon
+    env: docker
     plan: starter
+    dockerfilePath: ./Dockerfile
     autoDeploy: true
-    buildCommand: |
-      python -m pip install --upgrade pip setuptools wheel
-      pip install -r frontend/requirements.txt
-    startCommand: >
-      streamlit run frontend/app.py
-      --server.address 0.0.0.0
-      --server.port $PORT
+    previews: false
+    healthCheckPath: /
     envVars:
-      - key: BACKEND_URL
-        value: https://kpiflow-api-603131501793.us-central1.run.app
-      - key: PYTHONPATH
-        value: .
-      - key: PYTHON_VERSION
-        value: 3.11.9
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      # Fill this after backend is live:
+      - key: API_BASE_URL
+        sync: false
+
+  # ---- FastAPI API ----
+  - type: web
+    name: kpiflow-api
+    region: oregon
+    env: docker
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    autoDeploy: true
+    previews: false
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: AZURE_OPENAI_KEY
+        sync: false
+      - key: AZURE_OPENAI_ENDPOINT
+        sync: false
+      # Set this to the frontend URL after the first deploy
+      - key: UI_ORIGIN
+        sync: false
